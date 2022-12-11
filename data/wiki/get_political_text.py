@@ -9,7 +9,7 @@ from os.path import isfile, join
 from tqdm import tqdm
 
 def main():
-    wiki_dump_file_out = "./political_text/political_text.txt"
+    wiki_dump_file_out = "./political_text/political_text_full_len.txt"
     wiki_source_title_file = "./political_text/political_text_source.txt"
     wikitext_files = [os.path.join(dp, f) for dp, dn, filenames in os.walk("./text") for f in filenames ] # get all files in the text folder
     with open(wiki_dump_file_out, 'w', encoding='utf-8') as out_f:
@@ -21,7 +21,8 @@ def main():
                         if ('政府工作报告' in tmp['title']) or ('人民政府' in tmp['title']) or ():
                             #print(tmp['title'])
                             text = tmp['text']
-                            sentences = text_to_sentences(text)
+                            sentences = text.replace('\n','[SEP]')
+                            #sentences = text_to_sentences(text)
                             out_f2.write(tmp['title'] + '\t' + tmp['url'] + '\n')
                             out_f2.flush()
                             out_f.write(sentences + '\n')
