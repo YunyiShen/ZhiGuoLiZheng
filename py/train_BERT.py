@@ -1,6 +1,6 @@
 from pathlib import Path
 from datasets import load_dataset
-from transformers import BertTokenizerFast, BertForPreTraining
+from transformers import BertTokenizerFast, BertForPreTraining, BertForMaskedLM
 from transformers import DataCollatorForLanguageModeling
 from transformers import Trainer, TrainingArguments
 #from transformers import AutoModel, AutoConfig
@@ -24,7 +24,7 @@ def main():
     
     # prepare model
     #configuration = AutoConfig.from_pretrained('bert-base-chinese')
-    model = BertForPreTraining.from_pretrained('./pretrained/bert-base-chinese')
+    model = BertForMaskedLM.from_pretrained('./pretrained/bert-base-chinese')
     data_collator = DataCollatorForLanguageModeling(
         tokenizer=bert_tokenizer, mlm=False,
     )
