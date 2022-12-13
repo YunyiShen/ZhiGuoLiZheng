@@ -15,8 +15,7 @@ def main():
 
     # prepare dataset
     dataset = load_dataset("text", data_files=
-            {"train": "./data/wiki/political_text/political_text_sentences.txt", })
-              #{"train": "/state/partition1/user/yyshen/ZhiGuoLiZheng/data/wiki/political_text/political_text_sentences.txt", })
+              {"train": "./data/wiki/political_text/political_text_sentences.txt", })
         
     print(dataset['train'][5]) # take a look 
     dataset = dataset.map(lambda examples: bert_tokenizer(examples["text"], truncation=True, padding="max_length"), batched=True)
