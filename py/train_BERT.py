@@ -12,7 +12,7 @@ def main():
     #bert_tokenizer = BertTokenizerFast.from_pretrained('/state/partition1/user/yyshen/ZhiGuoLiZheng/pretrained/bert-base-chinese',
     bert_tokenizer = BertTokenizerFast.from_pretrained('./pretrained/bert-base-chinese',
              additional_special_tokens=["<s>","<pad>","</s>","<unk>","<mask>"],
-             pad_token='<pad>' ,max_len=5)
+             pad_token='<pad>' ,max_len=256)
 
     # prepare dataset
     dataset = load_dataset("text", data_files=
@@ -20,20 +20,22 @@ def main():
         
     print(dataset['train'][5]) # take a look 
     dataset = dataset.map(lambda examples: bert_tokenizer(examples["text"], truncation=True, padding="max_length"), batched=True)
-    print(len(dataset))
+    #print("removing text")
+    dataset = dataset.remove_columns("text")
     
     # prepare model
     #configuration = AutoConfig.from_pretrained('bert-base-chinese')
     model = BertForMaskedLM.from_pretrained('./pretrained/bert-base-chinese')
     data_collator = DataCollatorForLanguageModeling(
-        tokenizer=bert_tokenizer, mlm=False,
+        tokenizer=bert_tokenizer, mlm_probability=0.15,
     )
+    
     # how to train
     training_args = TrainingArguments(
         output_dir="./cache",
         overwrite_output_dir=True,
         num_train_epochs=10,
-        per_device_train_batch_size=1,
+        per_device_train_batch_size=32,
         save_steps=10_000,
         save_total_limit=2,
     )
@@ -52,3 +54,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
