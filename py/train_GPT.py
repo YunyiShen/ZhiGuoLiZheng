@@ -8,14 +8,19 @@ from transformers import Trainer, TrainingArguments
 
 def main():
     # tokenizer
-    bert_tokenizer = BertTokenizerFast.from_pretrained('bert-base-chinese',
-        additional_special_tokens=["<s>","<pad>","</s>","<unk>","<mask>"],
-        pad_token='<pad>' ,max_len=512)
+    #bert_tokenizer = BertTokenizerFast.from_pretrained('/state/partition1/user/yyshen/ZhiGuoLiZheng/pretrained/bert-base-chinese',
+    bert_tokenizer = BertTokenizerFast.from_pretrained('./pretrained/bert-base-chinese',
+             additional_special_tokens=["<s>","<pad>","</s>","<unk>","<mask>"],
+             pad_token='<pad>' ,max_len=256)
 
     # prepare dataset
     dataset = load_dataset("text", data_files=
-              {"train": "./data/wiki/political_text/political_text_sentences.txt", })
-    print(dataset['train'][10]) # take a look 
+            {"train": "./data/wiki/political_text/political_text_sentences.txt", })
+              #{"train": "/state/partition1/user/yyshen/ZhiGuoLiZheng/data/wiki/political_text/political_text_sentences.txt", })
+        
+    print(dataset['train'][5]) # take a look 
+    dataset = dataset.map(lambda examples: bert_tokenizer(examples["text"], truncation=True, padding="max_length"), batched=True)
+    print(len(dataset))
     
     # prepare model
     configuration = GPT2Config(vocab_size=25000, n_layer=8)
@@ -29,7 +34,7 @@ def main():
         output_dir="./cache",
         overwrite_output_dir=True,
         num_train_epochs=10,
-        per_gpu_train_batch_size=64,
+        per_device_train_batch_size=64,
         save_steps=10_000,
         save_total_limit=2,
     )
@@ -40,8 +45,10 @@ def main():
         train_dataset=dataset['train'],
     )
     trainer.train()
+    #model.save_pretrained("/state/partition1/user/yyshen/ZhiGuoLiZheng/pretrained/ZhiGuoLiZheng-GPT2")
     model.save_pretrained("./pretrained/ZhiGuoLiZheng-GPT2")
     bert_tokenizer.save_pretrained("./pretrained/ZhiGuoLiZheng-GPT2")
+    #bert_tokenizer.save_pretrained("/state/partition1/user/yyshen/ZhiGuoLiZheng/pretrained/ZhiGuoLiZheng-GPT2")
 
 
 if __name__ == "__main__":
