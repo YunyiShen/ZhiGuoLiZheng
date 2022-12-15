@@ -45,7 +45,7 @@ def main():
     trainer.train()
     #model.save_pretrained("/state/partition1/user/yyshen/ZhiGuoLiZheng/pretrained/ZhiGuoLiZheng-GPT2")
     model.save_pretrained("./pretrained/ZhiGuoLiZheng-GPT2-uer")
-    bert_tokenizer.save_pretrained("./pretrained/ZhiGuoLiZheng-GPT2-uer")
+    tokenizer.save_pretrained("./pretrained/ZhiGuoLiZheng-GPT2-uer")
     #bert_tokenizer.save_pretrained("/state/partition1/user/yyshen/ZhiGuoLiZheng/pretrained/ZhiGuoLiZheng-GPT2")
 
 
