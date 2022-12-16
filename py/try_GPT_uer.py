@@ -3,10 +3,10 @@ from transformers import pipeline, set_seed
 from transformers import GPT2Model, GPT2Config, GPT2LMHeadModel
 from transformers import BertTokenizer
 
-tokenizer = BertTokenizer.from_pretrained('./pretrained/ZhiGuoLiZheng-GPT2-uer',
+tokenizer = BertTokenizer.from_pretrained('yshen99/ZhiGuoLiZheng-GPT2',
     pad_token='<pad>' ,max_len=256)
 
-model = GPT2LMHeadModel.from_pretrained('./pretrained/ZhiGuoLiZheng-GPT2-uer')
+model = GPT2LMHeadModel.from_pretrained('yshen99/ZhiGuoLiZheng-GPT2')
 
 generator = pipeline('text-generation', model=model, tokenizer=tokenizer)
 set_seed(42)

@@ -11,7 +11,7 @@ def tokenize_function(examples, tokenizer):
         result["word_ids"] = [result.word_ids(i) for i in range(len(result["input_ids"]))]
     return result
 
-def group_texts(examples,chunk_size = 128):
+def group_texts(examples,chunk_size = 512):
     # Concatenate all texts
     concatenated_examples = {k: sum(examples[k], []) for k in examples.keys()}
     # Compute length of concatenated texts
@@ -31,7 +31,7 @@ def main():
     # tokenizer
     #bert_tokenizer = BertTokenizerFast.from_pretrained('/state/partition1/user/yyshen/ZhiGuoLiZheng/pretrained/bert-base-chinese',
     bert_tokenizer = BertTokenizer.from_pretrained('./pretrained/bert-base-chinese',
-             pad_token='<pad>' ,max_len=3)
+             pad_token='[PAD]' ,max_len=512)
 
     # prepare dataset
     dataset = load_dataset("text", data_files=
@@ -59,7 +59,7 @@ def main():
         output_dir="./cache",
         overwrite_output_dir=True,
         num_train_epochs=10,
-        per_device_train_batch_size=1,
+        per_device_train_batch_size=32,
         save_steps=10_000,
         save_total_limit=2,
     )
